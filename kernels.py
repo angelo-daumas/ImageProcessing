@@ -1,15 +1,12 @@
 import itertools
 import numpy as np
 from numpy.typing import NDArray
-from typing import Callable,Any
+from typing import Callable,Any,List,Tuple
 
-def extend_image(pixels, radius) -> NDArray[np.uint8]:
-    try:
-        # Image with shape=(N,M,Colorspace)
-        padded_pixels: NDArray[np.uint8] = np.pad(pixels, ((radius, radius),(radius,radius),(0,0)))  # type: ignore
-    except:
-        # Grayscale image with shape=(N,N)
-        padded_pixels: NDArray[np.uint8] = np.pad(pixels, ((radius, radius),(radius,radius))) # type: ignore
+def extend_image(pixels:NDArray[np.uint8], radius:int) -> NDArray[np.uint8]:
+    padding:List[Tuple[int,int]] = [(0,0)]*pixels.shape  # type: ignore
+    padding[0] = padding[1] = (radius,radius)
+    padded_pixels: NDArray[np.uint8] = np.pad(pixels, padding)  # type: ignore
 
     for i in range(0, radius):
         padded_pixels[i] = padded_pixels[radius]
