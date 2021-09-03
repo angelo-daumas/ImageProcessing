@@ -18,8 +18,6 @@ def extend_image(pixels, radius) -> NDArray[np.uint8]:
 def boxfilter(pixels:NDArray[np.uint8], radius:int=1):
     result:NDArray[np.uint16] = np.zeros(pixels.shape, dtype=np.uint16)  # type: ignore
     padded_pixels: NDArray[np.uint8] = extend_image(pixels, radius)
-
-    print(padded_pixels[...,0])
     
     get_slice: Callable[[int], slice] = lambda k: slice(radius+k,k-radius if k < radius else None)
     for i,j in itertools.product(range(-radius,radius+1), range(-radius,radius+1)):
