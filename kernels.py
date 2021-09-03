@@ -4,7 +4,12 @@ from numpy.typing import NDArray
 from typing import Callable,Any
 
 def extend_image(pixels, radius) -> NDArray[np.uint8]:
-    padded_pixels: NDArray[np.uint8] = np.pad(pixels, ((radius, radius),(radius,radius),(0,0)))  # type: ignore
+    try:
+        # Image with shape=(N,M,Colorspace)
+        padded_pixels: NDArray[np.uint8] = np.pad(pixels, ((radius, radius),(radius,radius),(0,0)))  # type: ignore
+    except:
+        # Grayscale image with shape=(N,N)
+        padded_pixels: NDArray[np.uint8] = np.pad(pixels, ((radius, radius),(radius,radius))) # type: ignore
 
     for i in range(0, radius):
         padded_pixels[i] = padded_pixels[radius]
