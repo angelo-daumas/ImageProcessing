@@ -4,7 +4,7 @@ from numpy.typing import NDArray
 from typing import Callable,Any,List,Tuple
 
 def extend_image(pixels:NDArray[np.uint8], radius:int) -> NDArray[np.uint8]:
-    padding:List[Tuple[int,int]] = [(0,0)]*pixels.shape  # type: ignore
+    padding:List[Tuple[int,int]] = [(0,0)]*len(pixels.shape)
     padding[0] = padding[1] = (radius,radius)
     padded_pixels: NDArray[np.uint8] = np.pad(pixels, padding)  # type: ignore
 
