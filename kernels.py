@@ -37,8 +37,8 @@ def kernelfilter(pixels:NDArray[np.uint8], kernel:NDArray[Any]) -> NDArray[np.ui
     get_slice: Callable[[int], slice] = lambda k: slice(radius+k,k-radius if k < radius else None)
     for i,j in itertools.product(range(-radius,radius+1), range(-radius,radius+1)):
         # print(weighted_pixels[sliceX, sliceY,0])
-        x = kernel[radius+i,radius+j]*padded_pixels[get_slice(i), get_slice(j)]
-        print(x.dtype)
+        x = (kernel[radius+i,radius+j]*padded_pixels[get_slice(i), get_slice(j)]).astype(np.uint32)
+        # print(x.dtype)
         result += x
 
     return np.array(result, dtype=np.uint8)
