@@ -39,3 +39,33 @@ for r in range(row):
             weightedAvgColor = color1 + color2 + color3 + color4
             newmatrix[r][c] = weightedAvgColor 
 
+
+import itertools
+def testing(img, transform):
+    inverse = AffineTransform(np.linalg.inv(transform.matrix))
+    maxX = img.shape[0] - 1
+    maxY = img.shape[1] - 1
+
+    x,y = transform.applyAll([[0, 0], [maxX, 0], [maxX, maxY], [0, maxY]]).T
+    r0 = np.min(x)
+    c0 = np.min(y)
+    width = np.max(x) - np.min(x)
+    height = np.max(y) - np.min(y)
+
+    for r in range(width):
+        for c in range(height):
+            pt = inverse @ np.array([r+r0, c+c0, 1])
+
+            if pt[0] >= 0 and pt[0] < img.shape[0]-1 and pt[1] >= 0 pt[1] < img.shape[1]-1:
+                x, y = pt
+
+                x0, y0 = np.floor(pt).astype(int)
+                x1, y1 = x0+1, y0+1
+
+                neighbors = img[x0:x0+1, y0:y0+2]
+                wx = np.array([[x0+1 - x], [x - x0]])
+                wy = np.array([[y0+1 - y], [y - y0]])
+                weights = wx @ wy.T
+
+                # Einsum for elementwise multiplication, broadcast to higher dimentions
+                final = sum(np.einsum('ij,ij...->ij...', weights, neighbors))
