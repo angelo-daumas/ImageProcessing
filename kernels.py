@@ -31,7 +31,7 @@ def boxfilter(pixels:NDArray[np.uint8], radius:int=1):
 
 def convolve(pixels:NDArray[np.uint8], kernel:NDArray[Any]) -> NDArray[float]:
     radius = len(kernel)//2
-    result:NDArray[np.float] = np.zeros(pixels.shape, dtype=float)  # type: ignore
+    result:NDArray[float] = np.zeros(pixels.shape, dtype=float)  # type: ignore
     padded_pixels: NDArray[np.uint8] = extend_image(pixels, radius)
 
     get_slice: Callable[[int], slice] = lambda k: slice(radius+k,k-radius if k < radius else None)
@@ -43,10 +43,16 @@ def convolve(pixels:NDArray[np.uint8], kernel:NDArray[Any]) -> NDArray[float]:
 
     return result
 
-sobel_kernel = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.int8)
-sobel_kernel2 = np.flip(sobel_kernel.T)
+sobel_kernel_x = 1/8 * np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.int8)
+sobel_kernel_y = 1/8 * np.flip(sobel_kernel.T)
 
-def sobel_filter():
-    pass
+laplace_kernel = 1/4 * np.array([[0,-1,0], [-1,4,-1], [0,-1,0]])
+gaussian_kernel = 1/16 * np.array([[1,2,1],[2,4,2],[1,2,1]])
 
-laplace_kernel = 1/4 * np.array([[0,1,0], [1,-4,1], [0,1,0]])
+def sobel_filter(pixels):
+    pixels = convolve(pixels, gaussian_kernel)
+
+    dx = convolve(pixels, sobel_kernel_x)
+    dy = convolve(pixels, sobel_kernel_y)
+
+    return np.sqrt(dx**2 + dy**2)
