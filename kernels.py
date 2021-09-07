@@ -44,7 +44,7 @@ def convolve(pixels:NDArray[np.uint8], kernel:NDArray[Any]) -> NDArray[float]:
     return result
 
 sobel_kernel_x = 1/8 * np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.int8)
-sobel_kernel_y = 1/8 * np.flip(sobel_kernel.T)
+sobel_kernel_y = 1/8 * np.flip(sobel_kernel_x.T)
 
 laplace_kernel = 1/4 * np.array([[0,-1,0], [-1,4,-1], [0,-1,0]])
 gaussian_kernel = 1/16 * np.array([[1,2,1],[2,4,2],[1,2,1]])
