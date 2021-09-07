@@ -31,13 +31,13 @@ def boxfilter(pixels:NDArray[np.uint8], radius:int=1):
 
 def convolve(pixels:NDArray[np.uint8], kernel:NDArray[Any]) -> NDArray[float]:
     radius = len(kernel)//2
-    result:NDArray[np.float] = np.zeros(pixels.shape, dtype=np.float)  # type: ignore
+    result:NDArray[np.float] = np.zeros(pixels.shape, dtype=float)  # type: ignore
     padded_pixels: NDArray[np.uint8] = extend_image(pixels, radius)
 
     get_slice: Callable[[int], slice] = lambda k: slice(radius+k,k-radius if k < radius else None)
     for i,j in itertools.product(range(-radius,radius+1), range(-radius,radius+1)):
         # print(weighted_pixels[sliceX, sliceY,0])
-        x = (kernel[radius+i,radius+j]*padded_pixels[get_slice(i), get_slice(j)]).astype(np.uint32)
+        x = (kernel[radius+i,radius+j]*padded_pixels[get_slice(i), get_slice(j)]).astype(float)
         # print(x.dtype)
         result += x
 
