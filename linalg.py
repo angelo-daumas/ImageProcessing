@@ -30,4 +30,4 @@ class AffineTransform:
     def applyAll(self, points:Sequence[PointLike]) -> NDArray[np.float64]:
         """Applies the transformation to a sequence of 2D points, using NumPy to speed up computation."""
         homogeneous:NDArray[np.float64]  = np.hstack([points, np.ones([len(points), 1])])  # type: ignore
-        return homogeneous @ self.matrix.T
+        return (homogeneous @ self.matrix.T)[:,:2]
