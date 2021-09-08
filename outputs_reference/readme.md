@@ -1,0 +1,1 @@
+Esta pasta contém as imagens esperadas como saída para cada arquivo JSON. Elas foram disponibilizadas no enunciado do trabalho.
