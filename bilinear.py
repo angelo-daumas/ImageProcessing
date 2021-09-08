@@ -33,6 +33,11 @@ class AffineTransform:
         return (homogeneous @ self.matrix.T)[:,:2]
 
 def get_transformed_bounds(img, transform):
+    """
+    Returns the transformed bounds of an image, after applying the given affine transformation.
+
+    Two points are returned: the new origin of the image and the new diagonal. Their coordinates are relative to the original origin point.
+    """
     maxX, maxY = img.shape[0:2] - np.array(1)
 
     x_coords,y_coords = transform.applyAll([[0, 0], [maxX, 0], [maxX, maxY], [0, maxY]]).T
@@ -42,6 +47,7 @@ def get_transformed_bounds(img, transform):
     return np.array([x_coords[0], y_coords[0]]), np.array([x_coords[-1], y_coords[-1]])
 
 def average_nearest_pixels(img, point):
+    """Returns the averaged values of a point's neighbouring pixels in an image."""
     x0, y0 = np.floor(point).astype(int)
 
     neighbors = img[x0:x0+2, y0:y0+2]
@@ -56,6 +62,7 @@ def average_nearest_pixels(img, point):
     return np.sum(np.einsum('ij,ij...->ij...', weights, neighbors))
 
 def bilinear_interp(img, transform):
+    """Performs billinear interpolation on an image, using inverse mapping."""
     inverse = AffineTransform(np.linalg.inv(transform.matrix))
     maxX, maxY = img.shape[0:2] - np.array(1)
 

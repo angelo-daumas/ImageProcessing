@@ -4,6 +4,7 @@ from numpy.typing import NDArray
 from typing import Callable,Any,List,Tuple
 
 def extend_image(pixels:NDArray[np.uint8], radius:int) -> NDArray[np.uint8]:
+    """Extends an image, using the values of the border pixels across the extension."""
     padding:List[Tuple[int,int]] = [(0,0)]*len(pixels.shape)
     padding[0] = padding[1] = (radius,radius)
     padded_pixels: NDArray[np.uint8] = np.pad(pixels, padding)  # type: ignore
@@ -18,6 +19,7 @@ def extend_image(pixels:NDArray[np.uint8], radius:int) -> NDArray[np.uint8]:
     return padded_pixels
 
 def boxfilter(pixels:NDArray[np.uint8], radius:int=1):
+    """Applies a box filter to an image, with a given radius."""
     result:NDArray[np.uint16] = np.zeros(pixels.shape, dtype=np.uint16)  # type: ignore
     padded_pixels: NDArray[np.uint8] = extend_image(pixels, radius)
     
@@ -30,6 +32,7 @@ def boxfilter(pixels:NDArray[np.uint8], radius:int=1):
 
 
 def convolve(pixels:NDArray[np.uint8], kernel:NDArray[Any]) -> NDArray[float]:
+    """Performs a convolution on a matrix, using the given kernel."""
     radius = len(kernel)//2
     result:NDArray[float] = np.zeros(pixels.shape, dtype=float)  # type: ignore
     padded_pixels: NDArray[np.uint8] = extend_image(pixels, radius)
@@ -50,6 +53,7 @@ laplace_kernel = 1/4 * np.array([[0,-1,0], [-1,4,-1], [0,-1,0]])
 gaussian_kernel = 1/16 * np.array([[1,2,1],[2,4,2],[1,2,1]])
 
 def sobel_filter(pixels):
+    """Applies a sobel filter to an image."""
     pixels = convolve(pixels, gaussian_kernel)
 
     dx = convolve(pixels, sobel_kernel_x)
